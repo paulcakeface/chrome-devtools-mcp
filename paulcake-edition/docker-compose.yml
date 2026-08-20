@@ -1,0 +1,31 @@
+services:
+  chrome-devtools-mcp-paulcake:
+    build:
+      context: .
+      args:
+        CHROME_DEVTOOLS_MCP_VERSION: "1.7.0"
+    image: chrome-devtools-mcp-paulcake-edition:1.0.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8814:8000"
+    environment:
+      BROWSER_IDLE_PARK_MS: "1200000"
+      BROWSER_IDLE_RECYCLE_MS: "3600000"
+      BROWSER_IDLE_CHECK_MS: "10000"
+      BROWSER_ACTIVITY_LEASE_MAX_MS: "7200000"
+    mem_limit: 2g
+    memswap_limit: 2g
+    cpus: 2.0
+    pids_limit: 512
+    shm_size: 512m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    init: true
+    healthcheck:
+      test: ["CMD", "node", "/usr/local/lib/browser-healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
